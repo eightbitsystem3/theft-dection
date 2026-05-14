@@ -1,18 +1,24 @@
 import React, { useEffect, useState, createContext, useContext } from "react";
-import { BrowserRouter as Router, Routes, Route, Link, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Link, useLocation, useNavigate } from "react-router-dom";
 import * as faceapi from "face-api.js";
 import EnrollPage from "./pages/EnrollPage";
-import VerifyPage from "./pages/VerifyPage";
+import LoginPage from "./pages/LoginPage";
 import AdminDashboard from "./components/AdminDashboard";
 
-// Create context for verification state
-const VerificationContext = createContext();
+// Create context for login state
+const AuthContext = createContext();
 
-export const useVerification = () => useContext(VerificationContext);
+export const useAuth = () => useContext(AuthContext);
 
 function Navigation() {
   const location = useLocation();
-  const { isVerified } = useVerification();
+  const { isLoggedIn, handleLogout } = useAuth();
+  const navigate = useNavigate();
+  
+  const handleLogoutClick = () => {
+    handleLogout();
+    navigate("/login");
+  };
   
   return (
     <nav>
@@ -22,26 +28,27 @@ function Navigation() {
       >
         Enroll
       </Link>
-      <Link 
-        to="/verify" 
-        className={location.pathname === "/verify" ? "active" : ""}
-      >
-        Verify
-      </Link>
-      {isVerified && (
+      {!isLoggedIn ? (
         <Link 
-          to="/admin" 
-          className={location.pathname === "/admin" ? "active" : ""}
+          to="/login" 
+          className={location.pathname === "/login" ? "active" : ""}
         >
-          Admin Dashboard
+          Login
         </Link>
+      ) : (
+        <button 
+          onClick={handleLogoutClick}
+          style={{ background: "linear-gradient(135deg, #f56565 0%, #c53030 100%)" }}
+        >
+          Logout
+        </button>
       )}
     </nav>
   );
 }
 
 function App() {
-  const [isVerified, setIsVerified] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const loadModels = async () => {
@@ -55,12 +62,16 @@ function App() {
     loadModels();
   }, []);
 
-  const handleVerificationSuccess = () => {
-    setIsVerified(true);
+  const handleLoginSuccess = () => {
+    setIsLoggedIn(true);
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
   };
 
   return (
-    <VerificationContext.Provider value={{ isVerified, handleVerificationSuccess }}>
+    <AuthContext.Provider value={{ isLoggedIn, handleLoginSuccess, handleLogout }}>
       <Router>
         <div className="container">
           <h1>Face Attendance System</h1>
@@ -69,12 +80,11 @@ function App() {
 
           <Routes>
             <Route path="/enroll" element={<EnrollPage />} />
-            <Route path="/verify" element={<VerifyPage onVerificationSuccess={handleVerificationSuccess} />} />
-            <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="/" element={<EnrollPage />} />
+            <Route path="/login" element={<LoginPage onLoginSuccess={handleLoginSuccess} />} />
+            <Route path="/" element={<LoginPage onLoginSuccess={handleLoginSuccess} />} />
           </Routes>
 
-          {isVerified && (
+          {isLoggedIn && (
             <>
               <hr />
               <AdminDashboard />
@@ -82,7 +92,7 @@ function App() {
           )}
         </div>
       </Router>
-    </VerificationContext.Provider>
+    </AuthContext.Provider>
   );
 }
 
