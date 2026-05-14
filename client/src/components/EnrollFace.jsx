@@ -34,6 +34,8 @@ export default function EnrollFace() {
       });
 
       alert("Enrollment successful");
+      setName("");
+      setEmail("");
     } catch (err) {
       console.error(err);
       alert("Enrollment failed");
@@ -44,16 +46,18 @@ export default function EnrollFace() {
 
   return (
     <div>
-      <h2>Enroll User</h2>
-
+      <label>Name</label>
       <input
-        placeholder="Name"
+        type="text"
+        placeholder="Enter your name"
         value={name}
         onChange={(e) => setName(e.target.value)}
       />
 
+      <label>Email</label>
       <input
-        placeholder="Email"
+        type="email"
+        placeholder="Enter your email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />

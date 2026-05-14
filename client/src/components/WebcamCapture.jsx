@@ -22,16 +22,16 @@ export default function WebcamCapture({
         screenshotFormat="image/jpeg"
         width={320}
         height={240}
+        style={{
+          borderRadius: "12px",
+          boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)"
+        }}
       />
 
       <button
         onClick={capture}
         disabled={loading}
-        style={{
-          marginTop: "10px",
-          padding: "10px 20px",
-          cursor: loading ? "not-allowed" : "pointer"
-        }}
+        style={{ marginTop: "20px" }}
       >
         {loading ? "Processing..." : buttonLabel}
       </button>
