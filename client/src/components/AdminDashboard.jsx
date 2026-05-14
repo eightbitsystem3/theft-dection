@@ -33,6 +33,20 @@ export default function AdminDashboard() {
         <div className="user-grid">
           {users.map((u) => (
             <div key={u._id} className="user-card">
+              {u.image && (
+                <img
+                  src={u.image}
+                  alt={u.name}
+                  style={{
+                    width: "80px",
+                    height: "80px",
+                    borderRadius: "50%",
+                    objectFit: "cover",
+                    marginBottom: "15px",
+                    border: "3px solid #667eea"
+                  }}
+                />
+              )}
               <div className="user-name">{u.name}</div>
               <div className="user-email">{u.email}</div>
               <button

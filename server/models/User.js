@@ -4,6 +4,7 @@ const userSchema = new mongoose.Schema({
   name: String,
   email: String,
   descriptor: [Number],
+  image: String,
   createdAt: {
     type: Date,
     default: Date.now

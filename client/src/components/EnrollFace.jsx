@@ -30,7 +30,8 @@ export default function EnrollFace() {
       await api.post("/enroll", {
         name,
         email,
-        descriptor: Array.from(detection.descriptor)
+        descriptor: Array.from(detection.descriptor),
+        image: img
       });
 
       alert("Enrollment successful");

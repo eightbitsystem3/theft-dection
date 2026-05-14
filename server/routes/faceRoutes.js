@@ -5,12 +5,13 @@ const router = express.Router();
 
 router.post("/enroll", async (req, res) => {
   try {
-    const { name, email, descriptor } = req.body;
+    const { name, email, descriptor, image } = req.body;
 
     const user = await User.create({
       name,
       email,
-      descriptor
+      descriptor,
+      image
     });
 
     res.json(user);
